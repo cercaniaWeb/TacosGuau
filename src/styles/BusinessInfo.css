@@ -1,0 +1,36 @@
+.business-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.info-card {
+  background: var(--background);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.info-card h3 {
+  color: var(--tacos-guau-orange);
+  margin-bottom: 15px;
+}
+
+.info-card .fas {
+  margin-right: 10px;
+}
+
+.hours-list {
+  list-style: none;
+  padding: 0;
+}
+
+.hours-list li {
+  margin-bottom: 10px;
+}
+
+.hours-list .day {
+  font-weight: bold;
+  color: var(--don-panda-red);
+}

@@ -1,0 +1,31 @@
+.hero {
+  background: linear-gradient(45deg, var(--tacos-guau-orange), var(--tacos-guau-yellow));
+  color: white;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.hero h2 {
+  font-size: 2.8rem;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto 30px;
+}
+
+.promo-banner {
+  background: rgba(0,0,0,0.2);
+  padding: 15px;
+  border-radius: 8px;
+  display: inline-block;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.promo-banner .fa-star {
+  color: var(--tacos-guau-yellow);
+  margin: 0 10px;
+}

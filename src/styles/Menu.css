@@ -1,0 +1,43 @@
+.menu-tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.tab-btn {
+  background: none;
+  border: 2px solid var(--tacos-guau-orange);
+  color: var(--tacos-guau-orange);
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+}
+
+.tab-btn.active, .tab-btn:hover {
+  background: var(--tacos-guau-orange);
+  color: white;
+}
+
+.menu-grid {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-grid {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+}
