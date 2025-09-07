@@ -1,0 +1,47 @@
+INSTRUCCIONES PARA CONFIGURAR ROLES DE USUARIO EN FIREBASE FIRESTORE
+
+Este archivo te guiará paso a paso para añadir los roles de administrador y comandera a tus usuarios en Firebase Firestore. Esto es crucial para que la aplicación sepa qué permisos tiene cada usuario.
+
+**Paso 1: Obtener los UID (Identificadores Únicos) de tus Usuarios**
+
+Primero, necesitamos el identificador único (UID) de cada usuario que creaste en Firebase Authentication. Este UID es como el DNI de cada usuario en Firebase.
+
+1.  **Ve a la Consola de Firebase:** Abre tu navegador y ve a https://console.firebase.google.com/
+2.  **Selecciona tu proyecto.**
+3.  En el menú de la izquierda, ve a **"Build" > "Authentication"**.
+4.  Haz clic en la pestaña **"Users"** (Usuarios).
+5.  Verás una lista de tus usuarios. Para cada uno de los correos electrónicos que usarás (`tacosguaupanda@gmail.com`, `annellrtz@gmail.com`, `rubirico23910@gmail.com`), copia el **UID** que aparece junto a su correo electrónico. Es una cadena larga de letras y números (ejemplo: `abcdef1234567890xyz`).
+    *   **¡Importante!** Guarda estos UID en un lugar seguro (un bloc de notas temporal), los necesitarás en el siguiente paso.
+
+**Paso 2: Crear la Colección `users` y Añadir los Roles en Firestore**
+
+Ahora, vamos a la base de datos para guardar los roles asociados a cada UID.
+
+1.  En el menú de la izquierda de la Consola de Firebase, ve a **"Build" > "Firestore Database"**.
+2.  Haz clic en el botón **"Start collection"** (Iniciar colección).
+3.  En el campo **"Collection ID"** (ID de la colección), escribe `users` (en minúsculas y plural).
+4.  Haz clic en **"Next"**.
+5.  Ahora, vas a añadir el primer documento (el primer usuario). Firebase te pedirá que añadas un "Document ID" y los "Fields" (campos).
+    *   En el campo **"Document ID"** (ID del documento), **pega el UID** que copiaste para el usuario `tacosguaupanda@gmail.com`.
+    *   En la sección de "Fields", haz clic en **"Add field"** (Añadir campo).
+        *   En el campo **"Field name"** (Nombre del campo), escribe `role`.
+        *   En el campo **"Field type"** (Tipo de campo), selecciona `string`.
+        *   En el campo **"Field value"** (Valor del campo), escribe `admin`.
+    *   Haz clic en **"Save"** (Guardar).
+
+6.  **Repite el paso 5 para los otros dos usuarios:**
+    *   Dentro de la colección `users` (que ya creaste), haz clic en **"Add document"** (Añadir documento).
+    *   Para el usuario `annellrtz@gmail.com`:
+        *   **Document ID:** Pega el UID de `annellrtz@gmail.com`.
+        *   **Field name:** `role`
+        *   **Field type:** `string`
+        *   **Field value:** `comandera`
+        *   Haz clic en **"Save"**.
+    *   Para el usuario `rubirico23910@gmail.com`:
+        *   **Document ID:** Pega el UID de `rubirico23910@gmail.com`.
+        *   **Field name:** `role`
+        *   **Field type:** `string`
+        *   **Field value:** `comandera`
+        *   Haz clic en **"Save"**.
+
+**¡Listo!** Una vez que hayas añadido los tres documentos con sus respectivos UID y roles, tu base de datos estará configurada para reconocer los roles de tus usuarios.

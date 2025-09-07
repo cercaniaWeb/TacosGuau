@@ -4,6 +4,8 @@ import '../styles/CartModal.css';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import CheckoutForm from './CheckoutForm';
+import { db } from '../firebase'; // Import db
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; // Import Firestore functions
 
 const stripePromise = loadStripe('pk_test_51S1ix4JHi6uvfAaFBSURmPS18ihdxP49gsVKA6hCtcWVbFI4i1eekczhUfpCwRiF66JN60B5EgnkOTo2rKhTh3CU003p48oloN');
 
@@ -23,6 +25,7 @@ const CartModal = ({ isOpen, onClose }) => {
     const name = e.target.customerName.value;
     const phone = e.target.customerPhone.value;
     const email = e.target.customerEmail.value;
+    const customerAlias = e.target.customerAlias.value; // New line
     const notes = e.target.customerNotes.value;
     
     if (!name || !phone) {
@@ -40,6 +43,7 @@ const CartModal = ({ isOpen, onClose }) => {
         name,
         phone,
         email,
+        customerAlias, // New line
         notes,
         items,
         total: getCartTotal(),
@@ -56,9 +60,20 @@ const CartModal = ({ isOpen, onClose }) => {
         });
 
         if (response.ok) {
-          alert(`¡Gracias por tu pedido, ${name}!\n\nHemos recibido tu pedido y, si proporcionaste un correo, te hemos enviado un recibo.`);
-          clearCart();
-          onClose();
+          // Save order to Firestore
+          try {
+            await addDoc(collection(db, 'orders'), {
+              ...orderData,
+              timestamp: serverTimestamp(),
+              status: 'pending' // Initial status
+            });
+            alert(`¡Gracias por tu pedido, ${name}!\n\nHemos recibido tu pedido y, si proporcionaste un correo, te hemos enviado un recibo.`);
+            clearCart();
+            onClose();
+          } catch (firestoreError) {
+            console.error('Error al guardar el pedido en Firestore:', firestoreError);
+            alert('Hubo un error al guardar tu pedido. Por favor, inténtalo de nuevo.');
+          }
         } else {
           alert('Hubo un error al procesar tu pedido. Por favor, inténtalo de nuevo.');
         }
@@ -128,6 +143,10 @@ const CartModal = ({ isOpen, onClose }) => {
             <div className="form-group full-width">
               <label htmlFor="customerEmail">Correo Electrónico (Opcional)</label>
               <input type="email" id="customerEmail" name="customerEmail" placeholder="Para recibir tu recibo por correo"/>
+            </div>
+            <div className="form-group full-width">
+              <label htmlFor="customerAlias">Nombre para Producción (Opcional)</label>
+              <input type="text" id="customerAlias" name="customerAlias" placeholder="Ej: Mesa 5, Cliente Juan"/>
             </div>
           </div>
           <div className="form-group">
