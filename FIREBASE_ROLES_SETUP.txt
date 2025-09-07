@@ -1,47 +1,93 @@
-INSTRUCCIONES PARA CONFIGURAR ROLES DE USUARIO EN FIREBASE FIRESTORE
+# Guía de Configuración del Proyecto Tacos Guau
 
-Este archivo te guiará paso a paso para añadir los roles de administrador y comandera a tus usuarios en Firebase Firestore. Esto es crucial para que la aplicación sepa qué permisos tiene cada usuario.
+Este documento contiene todas las configuraciones necesarias de tu parte para que la aplicación web sea 100% funcional. Sigue los pasos en cada sección.
 
-**Paso 1: Obtener los UID (Identificadores Únicos) de tus Usuarios**
+---
 
-Primero, necesitamos el identificador único (UID) de cada usuario que creaste en Firebase Authentication. Este UID es como el DNI de cada usuario en Firebase.
+## Sección 1: Configuración de Firebase
 
-1.  **Ve a la Consola de Firebase:** Abre tu navegador y ve a https://console.firebase.google.com/
-2.  **Selecciona tu proyecto.**
-3.  En el menú de la izquierda, ve a **"Build" > "Authentication"**.
-4.  Haz clic en la pestaña **"Users"** (Usuarios).
-5.  Verás una lista de tus usuarios. Para cada uno de los correos electrónicos que usarás (`tacosguaupanda@gmail.com`, `annellrtz@gmail.com`, `rubirico23910@gmail.com`), copia el **UID** que aparece junto a su correo electrónico. Es una cadena larga de letras y números (ejemplo: `abcdef1234567890xyz`).
-    *   **¡Importante!** Guarda estos UID en un lugar seguro (un bloc de notas temporal), los necesitarás en el siguiente paso.
+Firebase gestiona los usuarios, sus roles y los pedidos. Necesitas configurar dos cosas: los métodos de inicio de sesión y los roles de los administradores.
 
-**Paso 2: Crear la Colección `users` y Añadir los Roles en Firestore**
+### 1.1 Habilitar Métodos de Autenticación
 
-Ahora, vamos a la base de datos para guardar los roles asociados a cada UID.
+Debes permitir que los usuarios inicien sesión con su correo/contraseña y con Google.
 
-1.  En el menú de la izquierda de la Consola de Firebase, ve a **"Build" > "Firestore Database"**.
-2.  Haz clic en el botón **"Start collection"** (Iniciar colección).
-3.  En el campo **"Collection ID"** (ID de la colección), escribe `users` (en minúsculas y plural).
-4.  Haz clic en **"Next"**.
-5.  Ahora, vas a añadir el primer documento (el primer usuario). Firebase te pedirá que añadas un "Document ID" y los "Fields" (campos).
-    *   En el campo **"Document ID"** (ID del documento), **pega el UID** que copiaste para el usuario `tacosguaupanda@gmail.com`.
-    *   En la sección de "Fields", haz clic en **"Add field"** (Añadir campo).
-        *   En el campo **"Field name"** (Nombre del campo), escribe `role`.
-        *   En el campo **"Field type"** (Tipo de campo), selecciona `string`.
-        *   En el campo **"Field value"** (Valor del campo), escribe `admin`.
-    *   Haz clic en **"Save"** (Guardar).
+1.  Ve a la Consola de Firebase: https://console.firebase.google.com/
+2.  Selecciona tu proyecto (`tacosguau-611e6`).
+3.  En el menú de la izquierda, ve a **Build > Authentication**.
+4.  Haz clic en la pestaña **Sign-in method**.
+5.  En la lista de proveedores, busca y habilita los siguientes dos:
+    *   **Correo electrónico/Contraseña:** Haz clic, activa el primer interruptor y guarda.
+    *   **Google:** Haz clic, activa el interruptor, selecciona un correo de contacto del proyecto y guarda.
 
-6.  **Repite el paso 5 para los otros dos usuarios:**
-    *   Dentro de la colección `users` (que ya creaste), haz clic en **"Add document"** (Añadir documento).
-    *   Para el usuario `annellrtz@gmail.com`:
-        *   **Document ID:** Pega el UID de `annellrtz@gmail.com`.
-        *   **Field name:** `role`
-        *   **Field type:** `string`
-        *   **Field value:** `comandera`
-        *   Haz clic en **"Save"**.
-    *   Para el usuario `rubirico23910@gmail.com`:
-        *   **Document ID:** Pega el UID de `rubirico23910@gmail.com`.
-        *   **Field name:** `role`
-        *   **Field type:** `string`
-        *   **Field value:** `comandera`
-        *   Haz clic en **"Save"**.
+### 1.2 Configurar Roles de Administrador y Comandera
 
-**¡Listo!** Una vez que hayas añadido los tres documentos con sus respectivos UID y roles, tu base de datos estará configurada para reconocer los roles de tus usuarios.
+Este paso asigna los permisos especiales a tus cuentas de confianza.
+
+1.  **Obtén el UID de tus usuarios:**
+    *   En la misma sección de **Authentication**, ve a la pestaña **Users**.
+    *   Copia el **UID** (una cadena de letras y números) de cada una de las cuentas que usarás como `admin` y `comandera` (ej: `tacosguaupanda@gmail.com`, etc.).
+
+2.  **Crea los roles en la Base de Datos:**
+    *   En el menú de la izquierda, ve a **Build > Firestore Database**.
+    *   Haz clic en **+ Iniciar colección**.
+    *   **ID de la colección:** escribe `users` (en minúsculas).
+    *   Ahora, añade un documento por cada rol que quieras asignar:
+        *   Haz clic en **+ Añadir documento**.
+        *   **ID del documento:** Pega el **UID** que copiaste (ej: el de `tacosguaupanda@gmail.com`).
+        *   **Nombre del campo:** `role`
+        *   **Tipo del campo:** `string`
+        *   **Valor del campo:** `admin`
+        *   Haz clic en **Guardar**.
+    *   Repite el proceso de "Añadir documento" para las otras cuentas, usando el rol `comandera` según corresponda.
+
+---
+
+## Sección 2: Configuración de Variables de Entorno en Netlify
+
+Las variables de entorno guardan información sensible (como contraseñas y claves) de forma segura, sin exponerlas en el código. Debes configurarlas en Netlify, que es donde tu sitio está alojado.
+
+**Cómo añadir las variables:**
+
+1.  Ve a tu panel de control en https://app.netlify.com/
+2.  Selecciona tu sitio.
+3.  Ve a **Site configuration > Build & deploy > Environment**.
+4.  En la sección **Environment variables**, haz clic en **Edit variables** y añade las siguientes 4 variables, una por una:
+
+### Variable 1: GMAIL_USER
+*   **Descripción:** La cuenta de Gmail que enviará los correos de notificación de pedidos.
+*   **Llave:** `GMAIL_USER`
+*   **Valor:** `tacosguaupanda@gmail.com`
+
+### Variable 2: GMAIL_PASS
+*   **Descripción:** Una contraseña especial de 16 letras que generas en tu cuenta de Google para permitir que aplicaciones de terceros (como esta) usen tu cuenta de forma segura.
+*   **Cómo obtenerla:**
+    1.  Ve a la configuración de tu Cuenta de Google: https://myaccount.google.com/
+    2.  Ve a **Seguridad**.
+    3.  Asegúrate de tener activada la **Verificación en dos pasos**. Es obligatorio.
+    4.  En la misma sección de Seguridad, busca y haz clic en **Contraseñas de aplicaciones**.
+    5.  Crea una nueva contraseña: en "Seleccionar aplicación" elige "Otra (*nombre personalizado*)", escribe "Netlify TacosGuau" y haz clic en **Generar**.
+    6.  Copia la contraseña de 16 letras que aparece (sin los espacios) y pégala aquí.
+*   **Llave:** `GMAIL_PASS`
+*   **Valor:** La contraseña de aplicación de 16 letras que generaste.
+
+### Variable 3: NETLIFY_SITE_URL
+*   **Descripción:** La URL principal de tu sitio. Se usa para que el logo se muestre correctamente en los correos.
+*   **Llave:** `NETLIFY_SITE_URL`
+*   **Valor:** La URL de tu sitio (ej: `https://tacos-guau-app.netlify.app`)
+
+### Variable 4: REACT_APP_STRIPE_PUBLIC_KEY
+*   **Descripción:** La clave pública de Stripe para procesar pagos con tarjeta de forma segura en el navegador.
+*   **Cómo obtenerla:**
+    1.  Ve a tu panel de control de Stripe: https://dashboard.stripe.com/
+    2.  Asegúrate de no tener activado el "Modo de prueba" (a menos que estés probando).
+    3.  Ve a la sección **Desarrolladores > Claves de API**.
+    4.  Copia la **Clave publicable** (empieza con `pk_live_...` o `pk_test_...` si estás en modo de prueba).
+*   **Llave:** `REACT_APP_STRIPE_PUBLIC_KEY`
+*   **Valor:** Tu clave publicable de Stripe.
+
+---
+
+Una vez que hayas guardado todas estas variables en Netlify, **debes hacer un nuevo despliegue (re-deploy)** para que tu sitio aplique los cambios. Para ello, ve a la pestaña "Deploys" en Netlify y selecciona "Trigger deploy" > "Deploy site".
+
+¡Con esto, tu aplicación estará 100% configurada y funcional!

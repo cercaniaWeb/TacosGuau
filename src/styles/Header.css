@@ -2,6 +2,8 @@
   background: var(--tacos-guau-yellow);
   padding: 10px 0;
   border-bottom: 5px solid var(--tacos-guau-orange);
+  position: relative; /* Necesario para el z-index si se requiere */
+  z-index: 1000;
 }
 
 .header-content {
@@ -33,17 +35,21 @@
 .cart-icon-container {
   position: relative;
   cursor: pointer;
+  padding: 10px;
+  border-radius: 50%;
+  transition: all 0.4s ease-in-out;
 }
 
 .cart-icon-container .fa-shopping-cart {
   font-size: 2rem;
   color: var(--text-dark);
+  transition: color 0.3s ease;
 }
 
 .cart-count {
   position: absolute;
-  top: -10px;
-  right: -15px;
+  top: -5px;
+  right: -10px;
   background: var(--don-panda-red);
   color: white;
   border-radius: 50%;
@@ -51,4 +57,32 @@
   font-size: 0.9rem;
   font-weight: bold;
   border: 2px solid white;
+  transition: all 0.3s ease;
+}
+
+/* Estilos para el carrito flotante */
+.cart-icon-container.floating {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  background-color: var(--tacos-guau-orange);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transform: scale(1.1);
+  z-index: 1001;
+}
+
+.cart-icon-container.floating .fa-shopping-cart {
+  color: white;
+}
+
+.cart-icon-container.floating .cart-count {
+  top: -10px;
+  right: -15px;
+  border-color: var(--tacos-guau-orange);
+}
+
+/* Estilo para invitados */
+.cart-icon-container.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

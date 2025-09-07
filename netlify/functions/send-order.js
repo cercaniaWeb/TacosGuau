@@ -130,8 +130,8 @@ exports.handler = async (event, context) => {
 
     // 1. Enviar correo al negocio
     const businessMailOptions = {
-      from: '"Pedidos Tacos Guau" <cercaniaweb@gmail.com>',
-      to: 'cercaniaweb@gmail.com',
+      from: `"Pedidos Tacos Guau" <${process.env.GMAIL_USER}>`,
+      to: process.env.GMAIL_USER,
       subject: '¡Nuevo Pedido Recibido!',
       html: generateOrderEmailHtml({ ...JSON.parse(event.body), recipientType: 'business', logoUrl }),
     };
@@ -142,7 +142,7 @@ exports.handler = async (event, context) => {
     // 2. Enviar correo de confirmación al cliente (si proporcionó un email)
     if (email) {
       const customerMailOptions = {
-        from: '"Tacos Guau & Don Panda" <cercaniaweb@gmail.com>',
+        from: `"Tacos Guau & Don Panda" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: 'Confirmación de tu Pedido en Tacos Guau',
         html: generateOrderEmailHtml({ ...JSON.parse(event.body), recipientType: 'customer', logoUrl }),

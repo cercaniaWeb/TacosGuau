@@ -1,20 +1,24 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { useNotification } from '../context/NotificationContext'; // Import useNotification
+import { useNotification } from '../context/NotificationContext';
 import '../styles/MenuItem.css';
 
-const MenuItem = ({ item }) => {
+const MenuItem = ({ item, isGuest }) => {
   const [quantity, setQuantity] = useState(1);
   const { addItem } = useCart();
-  const { showNotification } = useNotification(); // Get showNotification
+  const { showNotification } = useNotification();
 
   const handleAddToCart = () => {
+    if (isGuest) {
+      showNotification('Inicia sesión para poder agregar productos al carrito.', 'info');
+      return;
+    }
     addItem({ ...item, quantity });
-    showNotification('Item agregado al carrito.', 'success'); // Show notification
+    showNotification('Producto agregado al carrito.', 'success');
   };
 
   return (
-    <div className="menu-item">
+    <div className={`menu-item ${isGuest ? 'is-guest' : ''}`}>
       <img src={item.category === 'birria' ? "/logopanda.png" : "/logo.png"} alt="Tacos Guau Logo" className="menu-item-logo" />
       {item.imageUrl && (
         <img src={item.imageUrl} alt={item.name} className="menu-item-product-image" />
@@ -33,8 +37,11 @@ const MenuItem = ({ item }) => {
           onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
           min="1"
           className="quantity-input"
+          disabled={isGuest}
         />
-        <button onClick={handleAddToCart} className="add-to-cart-btn">Agregar</button>
+        <button onClick={handleAddToCart} className="add-to-cart-btn" disabled={isGuest}>
+          {isGuest ? 'Inicia Sesión' : 'Agregar'}
+        </button>
       </div>
     </div>
   );

@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
-import { auth } from '../firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth, googleProvider } from '../firebase';
+import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import '../styles/Login.css';
 
-const Login = () => {
+// Importa el logo directamente desde la carpeta public
+const logo = '/logopanda.png';
+const googleIcon = 'https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg';
+
+const Login = ({ onGuestMode }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -12,41 +17,64 @@ const Login = () => {
     setError(null);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      // Redirigir o manejar el éxito del login
-      console.log('Usuario logueado con éxito!');
     } catch (err) {
-      setError(err.message);
-      console.error('Error al iniciar sesión:', err);
+      setError("Credenciales incorrectas. Por favor, inténtalo de nuevo.");
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setError(null);
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (err) {
+      setError("No se pudo iniciar sesión con Google. Inténtalo más tarde.");
     }
   };
 
   return (
-    <div className="login-container">
-      <h2>Iniciar Sesión</h2>
-      <form onSubmit={handleLogin}>
-        <div className="form-group">
-          <label htmlFor="email">Correo Electrónico:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Contraseña:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Iniciar Sesión</button>
-        {error && <p className="error-message">{error}</p>}
-      </form>
+    <div className="login-page">
+      <div className="login-container">
+        <img src={logo} alt="Logo Don Panda" className="login-logo" />
+        <h2>Bienvenido</h2>
+
+        <form onSubmit={handleLogin}>
+          <div className="form-group">
+            <label htmlFor="email">Correo Electrónico</label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="tu@email.com"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Contraseña</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
+            />
+          </div>
+          {error && <p className="error-message">{error}</p>}
+          <button type="submit" className="login-btn">Iniciar Sesión</button>
+        </form>
+
+        <div className="separator">o</div>
+
+        <button onClick={handleGoogleLogin} className="google-btn">
+          <img src={googleIcon} alt="Google Icon" className="google-icon" />
+          Continuar con Google
+        </button>
+
+        <button onClick={onGuestMode} className="guest-btn">
+          Ver Menú como invitado
+        </button>
+      </div>
     </div>
   );
 };

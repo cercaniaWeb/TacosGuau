@@ -1,7 +1,8 @@
 // src/components/Menu.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import MenuItem from './MenuItem';
 import '../styles/Menu.css';
+import { useNotification } from '../context/NotificationContext'; // Import useNotification
 
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -76,7 +77,23 @@ const getImageUrl = (item) => {
   return null;
 };
 
-const Menu = ({ activeCategory, setActiveCategory }) => {
+const Menu = ({ activeCategory, setActiveCategory, isGuest }) => {
+  const { showNotification } = useNotification();
+
+  useEffect(() => {
+    if (isGuest) {
+      const timer = setTimeout(() => {
+        showNotification(
+          'Modo invitado: Para ordenar, necesitarás iniciar sesión.',
+          'info',
+          5000 // La notificación dura 5 segundos
+        );
+      }, 1000); // Muestra la notificación 1 segundo después de que el componente se monte
+
+      return () => clearTimeout(timer);
+    }
+  }, [isGuest, showNotification]);
+
   // Productos REALES de Tacos Guau según las imágenes
   const tacosGuau = [
     {
@@ -359,7 +376,7 @@ const Menu = ({ activeCategory, setActiveCategory }) => {
       
       <div className="menu-grid">
         {finalFilteredItems.map(item => (
-          <MenuItem key={item.id} item={item} />
+          <MenuItem key={item.id} item={item} isGuest={isGuest} />
         ))}
       </div>
     </section>

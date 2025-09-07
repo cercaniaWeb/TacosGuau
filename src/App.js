@@ -9,22 +9,32 @@ import { CartProvider } from './context/CartContext';
 import './App.css';
 
 import { NotificationProvider } from './context/NotificationContext';
-import { AuthProvider, useAuth } from './context/AuthContext'; // Import AuthProvider and useAuth
-import Login from './components/Login'; // Import Login component
+import { AuthProvider, useAuth } from './context/AuthContext';
+import Login from './components/Login';
 
 function AppContent() {
   const { currentUser } = useAuth();
+  const [isGuestMode, setIsGuestMode] = useState(false);
   const [activeCategory, setActiveCategory] = useState('all');
 
-  if (!currentUser) {
-    return <Login />;
+  // Si no hay usuario y no está en modo invitado, muestra el Login.
+  if (!currentUser && !isGuestMode) {
+    return <Login onGuestMode={() => setIsGuestMode(true)} />;
   }
+
+  // Si hay usuario o está en modo invitado, muestra la app.
+  // Pasamos el estado de invitado a los componentes que lo necesiten.
+  const isGuest = !currentUser && isGuestMode;
 
   return (
     <div className="App">
-      <Header />
+      <Header isGuest={isGuest} />
       <Hero />
-      <Menu activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
+      <Menu 
+        activeCategory={activeCategory} 
+        setActiveCategory={setActiveCategory} 
+        isGuest={isGuest} 
+      />
       <BusinessInfo />
       <Footer />
     </div>
@@ -35,8 +45,8 @@ function App() {
   return (
     <NotificationProvider>
       <CartProvider>
-        <AuthProvider> {/* Wrap the entire app with AuthProvider */}
-          <AppContent /> {/* Render AppContent inside AuthProvider */}
+        <AuthProvider>
+          <AppContent />
         </AuthProvider>
       </CartProvider>
     </NotificationProvider>

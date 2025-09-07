@@ -66,15 +66,13 @@ const AdminOrdersModal = ({ isOpen, onClose }) => {
                 </ul>
 
                 <div className="order-actions">
-                  {currentUser && currentUser.role === 'admin' && (
+                  {currentUser && (currentUser.role === 'admin' || currentUser.role === 'comandera') && (
                     <>
                       <button onClick={() => updateOrderStatus(order.id, 'preparing')}>En Preparación</button>
                       <button onClick={() => updateOrderStatus(order.id, 'ready')}>Listo para Recoger</button>
                       <button onClick={() => updateOrderStatus(order.id, 'delivered')}>Entregado</button>
+                      <button onClick={() => updateOrderStatus(order.id, 'paid')}>Marcar como Cobrado</button>
                     </>
-                  )}
-                  {currentUser && currentUser.role === 'comandera' && (
-                    <button onClick={() => updateOrderStatus(order.id, 'paid')}>Marcar como Cobrado</button>
                   )}
                 </div>
               </div>

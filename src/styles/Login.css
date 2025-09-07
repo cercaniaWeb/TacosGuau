@@ -1,0 +1,140 @@
+/* src/styles/Login.css */
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f4; /* Un fondo suave */
+}
+
+.login-container {
+  background: white;
+  padding: 2rem 3rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 1rem;
+}
+
+.login-logo {
+  width: 150px;
+  margin-bottom: 1.5rem;
+}
+
+.login-container h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-size: 1.8rem;
+}
+
+.form-group {
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #555;
+  font-weight: 600;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+}
+
+.login-btn,
+.google-btn,
+.guest-btn {
+  width: 100%;
+  padding: 0.9rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.login-btn {
+  background-color: #ff4500; /* Naranja/rojo de Tacos Guau */
+  color: white;
+}
+
+.login-btn:hover {
+  background-color: #e03e00;
+}
+
+.google-btn {
+  background-color: #fff;
+  color: #4285F4; /* Color de Google */
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.google-btn:hover {
+  background-color: #f8f8f8;
+  border-color: #aaa;
+}
+
+.google-icon {
+  width: 20px;
+}
+
+.guest-btn {
+  background: none;
+  border: none;
+  color: #555;
+  font-weight: 500;
+  text-decoration: underline;
+  margin-top: 1rem;
+  padding: 0;
+}
+
+.guest-btn:hover {
+  color: #000;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #aaa;
+  margin: 1.5rem 0;
+}
+
+.separator::before,
+.separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #ddd;
+}
+
+.separator:not(:empty)::before {
+  margin-right: .25em;
+}
+
+.separator:not(:empty)::after {
+  margin-left: .25em;
+}
+
+.error-message {
+  color: #D8000C; /* Rojo de error */
+  background-color: #FFD2D2;
+  border: 1px solid #D8000C;
+  padding: 0.8rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}

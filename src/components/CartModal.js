@@ -7,7 +7,7 @@ import CheckoutForm from './CheckoutForm';
 import { db } from '../firebase'; // Import db
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; // Import Firestore functions
 
-const stripePromise = loadStripe('pk_test_51S1ix4JHi6uvfAaFBSURmPS18ihdxP49gsVKA6hCtcWVbFI4i1eekczhUfpCwRiF66JN60B5EgnkOTo2rKhTh3CU003p48oloN');
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
 const CartModal = ({ isOpen, onClose }) => {
   const [paymentMethod, setPaymentMethod] = useState('cash');
