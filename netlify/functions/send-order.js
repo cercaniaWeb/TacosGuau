@@ -43,7 +43,7 @@ const generateOrderEmailHtml = ({ name, phone, email, notes, items, total, payme
     <body>
       <div class="container">
         <div class="header">
-          <img src="cid:logopanda" alt="Logo Don Panda">
+          <img src="${logoUrl}" alt="Logo Don Panda">
           <h2>${headerText}</h2>
         </div>
         

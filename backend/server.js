@@ -1,3 +1,5 @@
+require('dotenv').config(); // Carga las variables de entorno desde .env
+
 const express = require('express');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
@@ -13,8 +15,8 @@ app.use(express.json());
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'cercaniaweb@gmail.com', // Tu email de Gmail
-    pass: 'recn hnrj fksw ajmj'   // Tu contraseña de aplicación de Gmail
+    user: process.env.GMAIL_USER, // Tu email de Gmail (desde variable de entorno)
+    pass: process.env.GMAIL_PASS   // Tu contraseña de aplicación de Gmail (desde variable de entorno)
   }
 });
 
@@ -110,8 +112,8 @@ app.post('/api/orders', (req, res) => {
 
   // 1. Enviar correo al negocio
   const businessMailOptions = {
-    from: '"Pedidos Tacos Guau" <cercaniaweb@gmail.com>',
-    to: 'cercaniaweb@gmail.com',
+    from: `"Pedidos Tacos Guau" <${process.env.GMAIL_USER}>`,
+    to: process.env.GMAIL_USER,
     subject: '¡Nuevo Pedido Recibido!',
     html: generateOrderEmailHtml({ ...req.body, recipientType: 'business' }),
     attachments: [{
@@ -133,7 +135,7 @@ app.post('/api/orders', (req, res) => {
   // 2. Enviar correo de confirmación al cliente (si proporcionó un email)
   if (email) {
     const customerMailOptions = {
-      from: '"Tacos Guau & Don Panda" <cercaniaweb@gmail.com>',
+      from: `"Tacos Guau & Don Panda" <${process.env.GMAIL_USER}>`,
       to: email,
       subject: 'Confirmación de tu Pedido en Tacos Guau',
       html: generateOrderEmailHtml({ ...req.body, recipientType: 'customer' }),
