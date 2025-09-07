@@ -66,5 +66,3 @@ const Header = ({ isGuest }) => {
 };
 
 export default Header;
-
-export default Header;

@@ -7,7 +7,9 @@ import CheckoutForm from './CheckoutForm';
 import { db } from '../firebase'; // Import db
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; // Import Firestore functions
 
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
+// Carga Stripe de forma segura, solo si la clave existe.
+const stripeKey = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
+const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
 
 const CartModal = ({ isOpen, onClose }) => {
   const [paymentMethod, setPaymentMethod] = useState('cash');
@@ -173,16 +175,20 @@ const CartModal = ({ isOpen, onClose }) => {
               <h3><i className="fas fa-mobile-alt"></i> Transferencia</h3>
               <p>Transferencia a cuenta clabe 646180401604754389 open light Santander</p>
             </div>
-            <div 
-              className={`payment-option ${paymentMethod === 'card' ? 'selected' : ''}`}
-              onClick={() => setPaymentMethod('card')}
-            >
-              <h3><i className="fas fa-credit-card"></i> Tarjeta de Crédito/Débito</h3>
-              <p>Paga con tu tarjeta de forma segura</p>
-            </div>
+            
+            {/* Solo muestra la opción de tarjeta si la clave de Stripe está disponible */}
+            {stripePromise && (
+              <div 
+                className={`payment-option ${paymentMethod === 'card' ? 'selected' : ''}`}
+                onClick={() => setPaymentMethod('card')}
+              >
+                <h3><i className="fas fa-credit-card"></i> Tarjeta de Crédito/Débito</h3>
+                <p>Paga con tu tarjeta de forma segura</p>
+              </div>
+            )}
           </div>
 
-          {paymentMethod === 'card' && (
+          {paymentMethod === 'card' && stripePromise && (
             <Elements stripe={stripePromise}>
               <CheckoutForm />
             </Elements>
