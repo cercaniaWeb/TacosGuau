@@ -1,6 +1,6 @@
-// src/components/CheckoutForm.js
-import React from 'react';
+import React, { useState } from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { useCart } from '../context/CartContext';
 import '../styles/CheckoutForm.css';
 
 const CARD_ELEMENT_OPTIONS = {
@@ -21,42 +21,79 @@ const CARD_ELEMENT_OPTIONS = {
   },
 };
 
-const CheckoutForm = () => {
+const CheckoutForm = ({ onSuccessfulCheckout }) => {
   const stripe = useStripe();
   const elements = useElements();
+  const { getCartTotal } = useCart();
+
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!stripe || !elements) {
+      // Stripe.js has not yet loaded.
       return;
     }
 
-    const cardElement = elements.getElement(CardElement);
+    setIsProcessing(true);
+    setErrorMessage(null);
 
-    const {error, paymentMethod} = await stripe.createPaymentMethod({
-      type: 'card',
-      card: cardElement,
-    });
+    try {
+      // 1. Crear la intención de pago en el backend
+      const res = await fetch('/.netlify/functions/create-payment-intent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ total: getCartTotal() }),
+      });
 
-    if (error) {
-      console.log('[error]', error);
-    } else {
-      console.log('[PaymentMethod]', paymentMethod);
-      // TODO: Send paymentMethod.id to your server.
+      if (!res.ok) {
+        throw new Error('No se pudo conectar con el servidor de pagos.');
+      }
+
+      const { clientSecret } = await res.json();
+
+      // 2. Confirmar el pago en el frontend con el clientSecret
+      const cardElement = elements.getElement(CardElement);
+      const { error: paymentError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: cardElement,
+        },
+      });
+
+      if (paymentError) {
+        setErrorMessage(paymentError.message);
+        setIsProcessing(false);
+        return;
+      }
+
+      // 3. Si el pago es exitoso, ejecutar la lógica final
+      if (paymentIntent.status === 'succeeded') {
+        console.log('Pago exitoso!', paymentIntent);
+        onSuccessfulCheckout(); // Llama a la función del padre para finalizar la orden
+      }
+
+    } catch (error) {
+      setErrorMessage(error.message);
+    } finally {
+      setIsProcessing(false);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="stripe-form">
       <div className="form-row">
-        <label htmlFor="card-element">
-          Tarjeta de Crédito o Débito
-        </label>
+        <label htmlFor="card-element">Datos de la Tarjeta</label>
         <CardElement id="card-element" options={CARD_ELEMENT_OPTIONS} />
       </div>
-      <button type="submit" disabled={!stripe} className="stripe-button">
-        Pagar
+      
+      {errorMessage && <div className="card-errors">{errorMessage}</div>}
+      
+      <button type="submit" disabled={!stripe || isProcessing} className="stripe-button">
+        {isProcessing ? 'Procesando...' : `Pagar $${getCartTotal().toFixed(2)}`}
       </button>
     </form>
   );

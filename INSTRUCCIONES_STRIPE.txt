@@ -1,0 +1,80 @@
+# Guía Súper Detallada para Obtener tus Claves de Stripe (para Producción)
+
+Hola! Esta guía te llevará de la mano, paso a paso, para que encuentres las dos (2) claves que necesitamos de tu cuenta de Stripe para poder procesar pagos reales en tu página web. Vamos a hacerlo con calma y con mucho detalle.
+
+### ¿Por qué necesitamos claves? ¿Y por qué dos?
+
+Imagina que tu cuenta de Stripe es como una tienda física. Para que tu página web pueda recibir pagos, necesita "conectarse" a esa tienda. Las claves son las que permiten esa conexión.
+
+Necesitamos dos tipos de claves por seguridad:
+
+1.  **Clave Publicable (empieza con `pk_live_`):** Es como la **dirección de tu tienda**. Es pública, no pasa nada si la gente la ve. Le dice al navegador del cliente: "Oye, aquí está la tienda de Tacos Guau en Stripe".
+
+2.  **Clave Secreta (empieza con `sk_live_`):** Es como la **llave de tu caja registradora**. Es súper secreta y privada. Solo la puedes usar tú en un lugar seguro (el "backend") para decirle a Stripe: "Ok, ya verifiqué todo, procede a realizar este cobro".
+
+¡Nunca compartas tu Clave Secreta con nadie ni la pongas en lugares públicos!
+
+---
+
+### Paso 1: Asegúrate de que tu cuenta de Stripe esté "Activada"
+
+Para poder recibir pagos reales, Stripe te pide que actives tu cuenta proporcionando información sobre tu negocio.
+
+*   Inicia sesión en tu panel de Stripe: https://dashboard.stripe.com/
+*   Al entrar, busca en la página principal un banner o un botón grande que diga **"Activar cuenta"** o "Activar pagos".
+*   Sigue los pasos que te pide Stripe. Te solicitarán detalles como la dirección de tu negocio, información fiscal y una cuenta bancaria donde depositarán tu dinero.
+
+**Si no ves este aviso, es probable que tu cuenta ya esté activa. ¡Perfecto!**
+
+---
+
+### Paso 2: Sal del "Modo de Prueba"
+
+Stripe tiene un "Modo de Prueba" para hacer tests sin usar dinero real. Para obtener las claves de producción, debemos desactivarlo.
+
+*   Mira en la esquina superior derecha de tu panel de Stripe.
+*   Verás un interruptor que dice **"Modo de prueba"**. Asegúrate de que ese interruptor esté **desactivado**. Generalmente, se verá de color gris cuando esté apagado.
+
+![Imagen de ejemplo del interruptor de Modo de Prueba](https://i.imgur.com/gOUnh4A.png)
+
+---
+
+### Paso 3: ¡A encontrar las Claves!
+
+Ahora que estamos listos, vamos a copiar las dos claves que necesitamos.
+
+1.  **Ve a la sección de Desarrolladores:** En el menú de la parte superior derecha de la página, busca y haz clic en la opción **"Desarrolladores"** (o "Developers").
+
+    ![Imagen de ejemplo del menú de Desarrolladores](https://i.imgur.com/g0e6G9L.png)
+
+2.  **Entra a "Claves de API":** En la nueva pantalla o menú lateral que aparece, haz clic en la opción **"Claves de API"** (o "API Keys").
+
+3.  **Copia tu Clave Publicable (`pk_live_...`):**
+    *   En la pantalla de "Claves de API", verás una sección llamada **"Claves estándar"**.
+    *   Ahí, verás un campo llamado **"Clave publicable"**. El valor de esa clave es una serie de letras y números que empieza con `pk_live_`.
+    *   Haz clic sobre la clave para que se copie automáticamente.
+    *   **ACCIÓN:** Abre un Bloc de Notas o cualquier editor de texto en tu computadora y pega esta clave. Ponle una nota como "Clave Publicable".
+
+    ![Imagen de ejemplo de la Clave Publicable](https://i.imgur.com/Jg0oN2k.png)
+
+4.  **Revela y Copia tu Clave Secreta (`sk_live_...`):**
+    *   Justo debajo de la clave publicable, verás el campo **"Clave secreta"**. Su valor estará oculto (verás puntitos o asteriscos).
+    *   Para verla, haz clic en el botón que dice **"Revelar clave de producción"** (o "Reveal live key").
+    *   Por seguridad, Stripe te pedirá que introduzcas tu contraseña de inicio de sesión. Hazlo y confirma.
+    *   ¡Ahí está! La clave secreta, que empieza con `sk_live_`, aparecerá.
+    *   **ACCIÓN:** Cópiala inmediatamente y pégala en tu Bloc de Notas junto a la otra. Ponle una nota como "Clave Secreta - ¡NO COMPARTIR!".
+
+---
+
+### ¡Listo! ¿Y ahora qué?
+
+¡Felicidades! Ya tienes las dos llaves maestras para tu negocio online.
+
+Ahora mismo, tienes guardadas en un lugar seguro:
+
+1.  Tu Clave Publicable (`pk_live_...`)
+2.  Tu Clave Secreta (`sk_live_...`)
+
+El siguiente paso es que yo construya la "caja fuerte" en el servidor (la función de backend) que usará tu clave secreta de forma segura. Una vez que esté lista, te guiaré para que juntos pongamos estas claves en la configuración de Netlify.
+
+**Por favor, avísame cuando ya tengas estas dos claves guardadas.**
