@@ -19,3 +19,4 @@
 .env.production.local
 
 .env
+NETLIFY_DEPLOY_INSTRUCTIONS.txt

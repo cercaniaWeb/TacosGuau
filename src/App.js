@@ -1,39 +1,36 @@
-// src/App.js
 import React, { useState } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Menu from './components/Menu';
 import BusinessInfo from './components/BusinessInfo';
 import Footer from './components/Footer';
+import LocationPromptModal from './components/LocationPromptModal'; // Importar el nuevo modal
 import { CartProvider } from './context/CartContext';
 import './App.css';
 
 import { NotificationProvider } from './context/NotificationContext';
-import { AuthProvider, useAuth } from './context/AuthContext';
-import Login from './components/Login';
+import { AuthProvider } from './context/AuthContext';
 
 function AppContent() {
-  const { currentUser } = useAuth();
-  const [isGuestMode, setIsGuestMode] = useState(false);
+  // Nuevo estado: null (no decidido), 'online', o 'in-store'
+  const [userMode, setUserMode] = useState(null);
   const [activeCategory, setActiveCategory] = useState('all');
 
-  // Si no hay usuario y no está en modo invitado, muestra el Login.
-  if (!currentUser && !isGuestMode) {
-    return <Login onGuestMode={() => setIsGuestMode(true)} />;
+  // Si el modo no ha sido seleccionado, muestra el popup de elección.
+  if (!userMode) {
+    return <LocationPromptModal onModeSelect={setUserMode} />;
   }
 
-  // Si hay usuario o está en modo invitado, muestra la app.
-  // Pasamos el estado de invitado a los componentes que lo necesiten.
-  const isGuest = !currentUser && isGuestMode;
-
+  // Una vez que se elige un modo, se renderiza la app principal.
+  // El modo se pasa como prop a los componentes que lo necesiten.
   return (
     <div className="App">
-      <Header isGuest={isGuest} />
+      <Header mode={userMode} />
       <Hero />
       <Menu 
         activeCategory={activeCategory} 
         setActiveCategory={setActiveCategory} 
-        isGuest={isGuest} 
+        mode={userMode} 
       />
       <BusinessInfo />
       <Footer />
@@ -44,11 +41,11 @@ function AppContent() {
 function App() {
   return (
     <NotificationProvider>
-      <CartProvider>
-        <AuthProvider>
+      <AuthProvider>
+        <CartProvider>
           <AppContent />
-        </AuthProvider>
-      </CartProvider>
+        </CartProvider>
+      </AuthProvider>
     </NotificationProvider>
   );
 }

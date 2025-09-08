@@ -1,0 +1,67 @@
+/* src/styles/LocationPromptModal.css */
+
+.prompt-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 2000; /* Muy alto para estar por encima de todo */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.prompt-modal-content {
+  background: white;
+  padding: 3rem 4rem;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+}
+
+.prompt-modal-content h2 {
+  font-size: 2rem;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.prompt-modal-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.prompt-btn {
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-online {
+  background-color: #ff4500; /* Naranja/rojo de Tacos Guau */
+  color: white;
+}
+
+.btn-online:hover {
+  background-color: #e03e00;
+  transform: translateY(-2px);
+}
+
+.btn-local {
+  background-color: #f8f9fa;
+  color: #343a40;
+  border: 2px solid #dee2e6;
+}
+
+.btn-local:hover {
+  background-color: #e9ecef;
+  border-color: #ced4da;
+}

@@ -32,6 +32,62 @@
   margin: 0;
 }
 
+/* Contenedor principal de todos los controles a la derecha */
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Espacio entre grupos de controles */
+}
+
+/* Controles de sesión */
+.session-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+
+.user-email {
+  font-weight: 500;
+  color: #333;
+}
+
+.session-btn {
+  background: none;
+  border: 2px solid var(--text-dark);
+  color: var(--text-dark);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.session-btn:hover {
+  background: var(--text-dark);
+  color: white;
+}
+
+/* Botón del panel de admin */
+.admin-panel-btn {
+  background-color: var(--don-panda-red);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.admin-panel-btn:hover {
+  background-color: #a00;
+}
+
+.admin-panel-btn i {
+  margin-right: 8px;
+}
+
 .cart-icon-container {
   position: relative;
   cursor: pointer;

@@ -1,0 +1,38 @@
+/* src/styles/LoginModal.css */
+
+.login-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 1100; /* Encima de otros modales si es necesario */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-modal-content {
+  position: relative;
+}
+
+/* Reutilizamos el botón de cierre de otros modales */
+.login-modal-content .close-btn {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  background: white;
+  color: black;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #333;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+}

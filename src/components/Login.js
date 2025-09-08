@@ -7,7 +7,7 @@ import '../styles/Login.css';
 const logo = '/logopanda.png';
 const googleIcon = 'https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg';
 
-const Login = ({ onGuestMode }) => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -71,9 +71,7 @@ const Login = ({ onGuestMode }) => {
           Continuar con Google
         </button>
 
-        <button onClick={onGuestMode} className="guest-btn">
-          Ver Menú como invitado
-        </button>
+        
       </div>
     </div>
   );

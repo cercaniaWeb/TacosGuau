@@ -13,7 +13,7 @@ const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
 const CartModal = ({ isOpen, onClose }) => {
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const { items, getCartTotal, clearCart, updateQuantity, removeItem } = useCart();
-  const formRef = useRef(null); // Referencia para el formulario
+  const formRef = useRef(null);
 
   const CLABE_ACCOUNT = '646180401604754389';
 
@@ -21,7 +21,6 @@ const CartModal = ({ isOpen, onClose }) => {
     return null;
   }
 
-  // Lógica centralizada para enviar la orden (email y Firestore)
   const handleFinalizeOrder = async (orderData) => {
     try {
       const response = await fetch('/.netlify/functions/send-order', {
@@ -30,9 +29,7 @@ const CartModal = ({ isOpen, onClose }) => {
         body: JSON.stringify(orderData),
       });
 
-      if (!response.ok) {
-        throw new Error('El servidor de notificaciones falló.');
-      }
+      if (!response.ok) throw new Error('El servidor de notificaciones falló.');
 
       await addDoc(collection(db, 'orders'), {
         ...orderData,
@@ -40,7 +37,7 @@ const CartModal = ({ isOpen, onClose }) => {
         status: 'pending',
       });
 
-      alert(`¡Gracias por tu pedido, ${orderData.name}!\n\nHemos recibido tu pedido y, si proporcionaste un correo, te hemos enviado un recibo.`);
+      alert(`¡Gracias por tu pedido, ${orderData.name}!\n\nHemos recibido tu pedido.`);
       clearCart();
       onClose();
 
@@ -50,14 +47,10 @@ const CartModal = ({ isOpen, onClose }) => {
     }
   };
 
-  // Maneja el submit para pagos que no son con tarjeta
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (items.length === 0) {
-      alert('Tu carrito está vacío.');
-      return;
-    }
-
+    if (items.length === 0) return alert('Tu carrito está vacío.');
+    
     const orderData = getOrderDataFromForm();
     if (!orderData) return;
 
@@ -66,15 +59,12 @@ const CartModal = ({ isOpen, onClose }) => {
     }
   };
 
-  // Se ejecuta cuando el pago con tarjeta es exitoso desde CheckoutForm
   const onSuccessfulCheckout = () => {
     const orderData = getOrderDataFromForm();
     if (!orderData) return;
-    
     handleFinalizeOrder({ ...orderData, paymentMethod: 'card' });
   };
 
-  // Helper para obtener los datos del formulario
   const getOrderDataFromForm = () => {
     const form = formRef.current;
     const name = form.customerName.value;
@@ -89,7 +79,6 @@ const CartModal = ({ isOpen, onClose }) => {
       name,
       phone,
       email: form.customerEmail.value,
-      customerAlias: form.customerAlias.value,
       notes: form.customerNotes.value,
       items,
       total: getCartTotal(),
@@ -98,8 +87,8 @@ const CartModal = ({ isOpen, onClose }) => {
 
   const handleCopyClabe = () => {
     navigator.clipboard.writeText(CLABE_ACCOUNT)
-      .then(() => alert('Número de cuenta CLABE copiado al portapapeles: ' + CLABE_ACCOUNT))
-      .catch(() => alert('No se pudo copiar el número de cuenta CLABE.'));
+      .then(() => alert('Número de cuenta CLABE copiado: ' + CLABE_ACCOUNT))
+      .catch(() => alert('No se pudo copiar el número de cuenta.'));
   };
 
   return (
@@ -114,10 +103,7 @@ const CartModal = ({ isOpen, onClose }) => {
           <div className="cart-items-list">
             {items.map(item => (
               <div key={item.id} className="cart-item">
-                <div className="item-info">
-                  <h4>{item.name}</h4>
-                  <p>${item.price.toFixed(2)}</p>
-                </div>
+                <div className="item-info"><h4>{item.name}</h4><p>${item.price.toFixed(2)}</p></div>
                 <div className="item-controls">
                   <input type="number" value={item.quantity} onChange={(e) => updateQuantity(item, parseInt(e.target.value, 10))} min="1" />
                   <button onClick={() => removeItem(item)} className="remove-item-btn">&times;</button>
@@ -134,15 +120,14 @@ const CartModal = ({ isOpen, onClose }) => {
             <div className="form-group"><label htmlFor="customerName">Nombre Completo *</label><input type="text" id="customerName" name="customerName" required /></div>
             <div className="form-group"><label htmlFor="customerPhone">Teléfono *</label><input type="tel" id="customerPhone" name="customerPhone" required /></div>
             <div className="form-group full-width"><label htmlFor="customerEmail">Correo Electrónico (Opcional)</label><input type="email" id="customerEmail" name="customerEmail" placeholder="Para recibir tu recibo por correo"/></div>
-            <div className="form-group full-width"><label htmlFor="customerAlias">Nombre para Producción (Opcional)</label><input type="text" id="customerAlias" name="customerAlias" placeholder="Ej: Mesa 5, Cliente Juan"/></div>
           </div>
           <div className="form-group"><label htmlFor="customerNotes">Notas adicionales (Opcional)</label><textarea id="customerNotes" name="customerNotes" placeholder="Especificaciones especiales para tu pedido"></textarea></div>
 
           <h3 className="section-title">Método de Pago</h3>
           <div className="payment-methods">
             <div className={`payment-option ${paymentMethod === 'cash' ? 'selected' : ''}`} onClick={() => setPaymentMethod('cash')}><h3><i className="fas fa-money-bill-wave"></i> Efectivo</h3><p>Paga en efectivo al recoger tu pedido</p></div>
-            <div className={`payment-option ${paymentMethod === 'transfer' ? 'selected' : ''}`} onClick={() => { setPaymentMethod('transfer'); handleCopyClabe(); }}><h3><i className="fas fa-mobile-alt"></i> Transferencia</h3><p>Transferencia a cuenta clabe 646180401604754389 open light Santander</p></div>
-            {stripePromise && (<div className={`payment-option ${paymentMethod === 'card' ? 'selected' : ''}`} onClick={() => setPaymentMethod('card')}><h3><i className="fas fa-credit-card"></i> Tarjeta de Crédito/Débito</h3><p>Paga con tu tarjeta de forma segura</p></div>)}
+            <div className={`payment-option ${paymentMethod === 'transfer' ? 'selected' : ''}`} onClick={() => { setPaymentMethod('transfer'); handleCopyClabe(); }}><h3><i className="fas fa-mobile-alt"></i> Transferencia</h3><p>Transferencia a cuenta clabe.</p></div>
+            {stripePromise && (<div className={`payment-option ${paymentMethod === 'card' ? 'selected' : ''}`} onClick={() => setPaymentMethod('card')}><h3><i className="fas fa-credit-card"></i> Tarjeta</h3><p>Paga con tu tarjeta de forma segura</p></div>)}
           </div>
 
           {paymentMethod === 'card' && stripePromise && (
